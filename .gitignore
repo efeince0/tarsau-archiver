@@ -1,0 +1,56 @@
+# Build artifacts
+*.o
+*.a
+*.exe
+*.dll
+*.so
+
+# Object and library files
+*.obj
+*.lib
+*.exp
+
+# Generated archives
+*.sau
+
+# Test output directories
+test_cikti/
+test_dosyalari/
+
+# Valgrind test files
+_vg_test.sau
+_vg_t1.txt
+_vg_t2.txt
+_vg_out/
+vgcore.*
+
+# Temporary and backup files
+*.bak
+*.tmp
+*.swp
+*.swo
+*~
+core
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS specific
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Project specific test files
+a.sau
+test_arsiv.sau
+binary_test.dat
+corrupted.sau
+bad.sau
+hata_test.sau
+extract_test/
