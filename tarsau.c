@@ -222,36 +222,29 @@ static int arsivle(char *dosyalar[], int dosya_sayisi,
         /* Dosya erişilebilir mi? */
         if (stat(dosyalar[i], &durum) < 0) {
             fprintf(stderr,
-                    "Hata: '%s' dosyası bulunamadı veya erişilemiyor!\n",
-                    dosyalar[i]);
-            return -1;  /* Uyumsuz dosya: hata mesajı ver ve hemen çık */
+                    "%s giriş dosyasının formatı uyumsuzdur!\n", dosyalar[i]);
+            return -1;
         }
 
         /* Düzenli (regular) dosya mı? (dizin, sembolik bağ vs. reddedilir) */
         if (!S_ISREG(durum.st_mode)) {
             fprintf(stderr,
-                    "Hata: '%s' bir dizin, sembolik bağ veya özel dosyadır. "
-                    "Sadece düzenli metin dosyaları arşivlenebilir!\n",
-                    dosyalar[i]);
-            return -1;  /* Uyumsuz dosya: hata mesajı ver ve hemen çık */
+                    "%s giriş dosyasının formatı uyumsuzdur!\n", dosyalar[i]);
+            return -1;
         }
 
         /* ASCII metin dosyası mı? */
         if (!metin_dosyasi_mi(dosyalar[i])) {
             fprintf(stderr,
-                    "Hata: '%s' dosyası 7-bit ASCII metin dosyası değildir. "
-                    "(UTF-8, binary veya diğer kodlamalar desteklenmiyor)\n",
-                    dosyalar[i]);
-            return -1;  /* Uyumsuz dosya: hata mesajı ver ve hemen çık */
+                    "%s giriş dosyasının formatı uyumsuzdur!\n", dosyalar[i]);
+            return -1;
         }
 
         /* Dosya adı uzunluk sınırı */
         if (strlen(dosyalar[i]) >= MAX_DOSYA_ADI) {
             fprintf(stderr,
-                    "Hata: '%s' dosya adı çok uzun! "
-                    "Maksimum %d karakter olmalıdır.\n",
-                    dosyalar[i], MAX_DOSYA_ADI - 1);
-            return -1;  /* Uyumsuz dosya: hata mesajı ver ve hemen çık */
+                    "%s giriş dosyasının formatı uyumsuzdur!\n", dosyalar[i]);
+            return -1;
         }
 
         /* Toplam boyut 200 MB sınırını aşıyor mu? */
@@ -443,10 +436,7 @@ static int arsiv_ac(const char *arsiv_dosyasi, const char *hedef_dizin)
     /* -------- 1. Arşiv Dosyasını Aç -------- */
     int arsiv_fd = open(arsiv_dosyasi, O_RDONLY);
     if (arsiv_fd < 0) {
-        fprintf(stderr,
-                "Hata: '%s' arşiv dosyası bulunamadı veya açılamadı!\n"
-                "Lütfen dosya yolunun doğru olduğundan emin olun.\n",
-                arsiv_dosyasi);
+        fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
         return -1;
     }
 
@@ -455,10 +445,7 @@ static int arsiv_ac(const char *arsiv_dosyasi, const char *hedef_dizin)
     memset(boyut_str, 0, sizeof(boyut_str));
 
     if (read(arsiv_fd, boyut_str, BASLIK_ALANI_BOYU) != BASLIK_ALANI_BOYU) {
-        fprintf(stderr,
-                "Hata: '%s' arşiv dosyası bozuk veya eksiktir!\n"
-                "Dosya geçerli bir .sau arşivi değil.\n",
-                arsiv_dosyasi);
+        fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
         close(arsiv_fd);
         return -1;
     }
@@ -467,10 +454,7 @@ static int arsiv_ac(const char *arsiv_dosyasi, const char *hedef_dizin)
     /* Tüm karakterlerin rakam olduğunu doğrula */
     for (int i = 0; i < BASLIK_ALANI_BOYU; i++) {
         if (!isdigit((unsigned char)boyut_str[i])) {
-            fprintf(stderr,
-                    "Hata: '%s' arşiv başlığı geçersiz!\n"
-                    "Bu dosya tarsau tarafından oluşturulan geçerli bir .sau dosyası değil.\n",
-                    arsiv_dosyasi);
+            fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
             close(arsiv_fd);
             return -1;
         }
@@ -481,10 +465,7 @@ static int arsiv_ac(const char *arsiv_dosyasi, const char *hedef_dizin)
 
     /* Mantıksal geçerlilik kontrolü */
     if (bolum1_boyu < BASLIK_ALANI_BOYU || org_uzunluk <= 0) {
-        fprintf(stderr,
-                "Hata: '%s' arşiv dosyası bozuk veya geçersiz!\n"
-                "Bölüm boyutları tutarsız.\n",
-                arsiv_dosyasi);
+        fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
         close(arsiv_fd);
         return -1;
     }
