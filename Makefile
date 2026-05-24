@@ -72,7 +72,7 @@ test: $(TARGET)
 
 	@echo ""
 	@echo "--- TEST 2: Arşiv içeriğini incele (hex başlık) ---"
-	@echo "İlk 80 karakter:"
+	@echo "İlk 80 karakter (organizasyon bölümü):"
 	@head -c 80 $(ARCH_FILE); echo ""
 
 	@echo ""
@@ -80,7 +80,7 @@ test: $(TARGET)
 	./$(TARGET) -a $(ARCH_FILE) $(TEST_DIR)
 
 	@echo ""
-	@echo "--- TEST 4: İzin doğrulama ---"
+	@echo "--- TEST 4: İzin doğrulama (dosyalar orijinal izinlerle çıkarılmalı) ---"
 	@echo "Çıkarılan dosya izinleri:"
 	@ls -l $(TEST_DIR)/
 	@echo ""

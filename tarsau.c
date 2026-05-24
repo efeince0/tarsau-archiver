@@ -64,6 +64,7 @@ static int metin_dosyasi_mi(const char *dosya_yolu)
     fd = open(dosya_yolu, O_RDONLY);
     if (fd < 0) return 0;
 
+    /* Dosyayı tampon halinde oku ve her baytı kontrol et */
     while ((okunan = read(fd, tampon, sizeof(tampon))) > 0) {
         for (ssize_t i = 0; i < okunan; i++) {
             /* 0x80 (128) ve üzeri baytlar ASCII değildir */
@@ -172,6 +173,7 @@ static char *organizasyon_bolumu_olustur(const DosyaKaydi *kayitlar,
         return NULL;
     }
 
+    /* Organizasyon metnini oluştur, her kayıt için format: |dosyaadi,0644,1024| */
     int toplam = 0;
     for (int i = 0; i < sayi; i++) {
         /* Format: |dosyaadi,0644,1024| */
@@ -616,6 +618,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    /* Program iki modda çalışır: -b (arşivleme) veya -a (çıkarma) */
     /* ===================================================
      * MOD: Arşivleme  →  tarsau -b dosya1 ... [-o cikti.sau]
      * =================================================== */
