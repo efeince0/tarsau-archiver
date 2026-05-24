@@ -117,6 +117,51 @@ $ ./tarsau -a test.sau extracted/
 Arşiv başarıyla açıldı: 2 dosya çıkarıldı.
 ```
 
+### Example 3: Multiple Files with Different Permissions
+
+```bash
+$ chmod 755 important.txt
+$ chmod 600 secret.txt
+$ ./tarsau -b important.txt secret.txt notes.txt -o mydata.sau
+Arşiv başarıyla oluşturuldu: mydata.sau  (3 dosya, 0.15 KB)
+
+$ ./tarsau -a mydata.sau backup/
+Çıkarıldı: backup/important.txt   izin: 0755  boyut: 1024 bayt
+Çıkarıldı: backup/secret.txt      izin: 0600  boyut: 512 bayt
+Çıkarıldı: backup/notes.txt       izin: 0644  boyut: 256 bayt
+Arşiv başarıyla açıldı: 3 dosya çıkarıldı.
+
+$ ls -l backup/
+-rwxr-xr-x important.txt
+-rw------- secret.txt
+-rw-r--r-- notes.txt
+```
+
+### Example 4: Archive Verification
+
+```bash
+# Create archive
+$ ./tarsau -b doc1.txt doc2.txt -o backup.sau
+
+# Inspect archive structure (first 100 bytes)
+$ head -c 100 backup.sau
+
+# Extract and verify
+$ ./tarsau -a backup.sau extracted/
+$ diff doc1.txt extracted/doc1.txt && echo "✓ Files match perfectly"
+```
+
+### Example 5: Batch Processing
+
+```bash
+# Archive all .txt files in a directory
+$ ./tarsau -b *.txt -o all_docs.sau
+
+# Extract to a new backup directory
+$ mkdir -p backups/2026-05-24
+$ ./tarsau -a all_docs.sau backups/2026-05-24/
+```
+
 ## ⚠️ Limitations & Requirements
 
 - **ASCII Only**: Only accepts 7-bit ASCII text files (no UTF-8, binary, or Unicode)
